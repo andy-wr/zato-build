@@ -66,10 +66,10 @@ function checkout_zato {
 }
 
 function install_zato {
-    cp $SOURCE_DIR/_install-fedora.sh $ZATO_TARGET_DIR/code
     cd $ZATO_TARGET_DIR/code
     bash ./install.sh
     find $ZATO_TARGET_DIR/. -name *.pyc -exec rm -f {} \;
+    find $ZATO_TARGET_DIR/. ! -perm /004 -exec chmod 644 {} \;
 }
 
 function build_rpm {
