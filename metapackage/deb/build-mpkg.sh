@@ -7,6 +7,7 @@ then
 fi
 
 ZATO_VERSION=$1
+cd /opt/tmp/metapackage/deb
 
 sed "s/ZATO_VERSION/$ZATO_VERSION/g" zato-metapackage.cfg.template > zato-metapackage.cfg
 sed "s/ZATO_VERSION/$ZATO_VERSION/g" changelog.template > changelog
