@@ -1,0 +1,5 @@
+zato-metapackage (ZATO_VERSION) stable; urgency=low
+
+  * Create metapackage for zato
+
+ -- Dariusz Suchojad <dsuch@zato.io>  Tue, 14 Jul 2015 21:28:10 +0200

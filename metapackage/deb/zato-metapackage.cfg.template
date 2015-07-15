@@ -1,0 +1,12 @@
+Section: ESB
+Priority: optional
+Homepage: http://zato.io
+Standards-Version: 3.9.2
+
+Package: zato-metapackage
+Maintainer: Dariusz Suchojad <dsuch@zato.io>
+Depends: zato (= ZATO_VERSION)
+Copyright: copyright
+Changelog: changelog
+Readme: README.Debian
+Description: Metapackage for Zato - The next generation ESB and application server....
