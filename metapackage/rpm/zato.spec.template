@@ -1,0 +1,31 @@
+Name:           zato-metapackage
+Version:        ZATO_VERSION
+Summary:        Metapackage for Zato - The next generation ESB and application server.
+
+Group:          ESB
+License:        GPLv2
+URL:            http://zato.io
+
+AutoReqProv: no
+
+Requires: zato (= ZATO_VERSION)
+
+%description
+zato-metapackage for RHEL
+This is a dummy package for RHEL's package management.
+
+%prep
+
+%build
+
+%clean 
+
+%install
+
+%post
+
+%files
+
+%changelog
+* Tue Jul 14 2015  dsuch (at) zato.io
+- Create metapackage for zato
