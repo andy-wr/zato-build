@@ -8,7 +8,7 @@ URL:            http://zato.io
 
 AutoReqProv: no
 
-Requires: zato (= ZATO_VERSION)
+Requires: zato = ZATO_VERSION
 
 %description
 zato-metapackage for RHEL
