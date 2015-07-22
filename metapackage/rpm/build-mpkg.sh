@@ -12,7 +12,7 @@ CURDIR="${BASH_SOURCE[0]}";RL="readlink";([[ `uname -s`=='Darwin' ]] || RL="$RL 
 while([ -h "${CURDIR}" ]) do CURDIR=`$RL "${CURDIR}"`; done
 N="/dev/null";pushd .>$N;cd `dirname ${CURDIR}`>$N;CURDIR=`pwd`;popd>$N
 
-SOURCE_DIR=$CURDIR/package-base
+SOURCE_DIR=$CURDIR
 TMP_DIR=/opt/tmp
 RPM_BUILD_DIR=/root/rpmbuild
 
