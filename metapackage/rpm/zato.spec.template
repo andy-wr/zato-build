@@ -1,5 +1,6 @@
 Name:           zato-metapackage
 Version:        ZATO_VERSION
+Release:        0
 Summary:        Metapackage for Zato - The next generation ESB and application server.
 
 Group:          ESB
