@@ -2,11 +2,18 @@
 
 if [[ -z "$1" ]]
 then
-echo Argument 1 must be release version
+echo Argument 1 must be Zato version
     exit 1
 fi
 
-RELEASE_VERSION=$1
+if [[ -z "$2" ]]
+then
+echo Argument 2 must be package version
+    exit 2
+fi
+
+ZATO_VERSION=$1
+PACKAGE_VERSION=$2
 
 CURDIR="${BASH_SOURCE[0]}";RL="readlink";([[ `uname -s`=='Darwin' ]] || RL="$RL -f")
 while([ -h "${CURDIR}" ]) do CURDIR=`$RL "${CURDIR}"`; done
@@ -14,9 +21,7 @@ N="/dev/null";pushd .>$N;cd `dirname ${CURDIR}`>$N;CURDIR=`pwd`;popd>$N
 
 echo "Building packages zato-metapackage for all distros"
 
-#systems="redhat-7-64 ubuntu-14.04-64"
-systems="ubuntu-14.04-64"
-
+systems="redhat-7-64 ubuntu-14.04-64"
 
 function cleanup {
 echo "Cleaning up synced directories..."
@@ -41,7 +46,8 @@ function checkout_zatomp {
    do
     cd $CURDIR/vm/$system
     cp ./Vagrantfile.template ./Vagrantfile
-    sed -i.bak "s#ARGS#$RELEASE_VERSION#g" ./Vagrantfile
+    sed -i.bak "s#ARGS#$ZATO_VERSION $PACKAGE_VERSION#g" ./Vagrantfile
+
     git clone https://github.com/andy-wr/zato-build.git ./synced
    done
 }

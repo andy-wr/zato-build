@@ -6,7 +6,14 @@ echo Argument 1 must be Zato version
     exit 1
 fi
 
+if [[ -z "$2" ]]
+then
+echo Argument 2 must be package version
+    exit 2
+fi
+
 ZATO_VERSION=$1
+PACKAGE_VERSION=$2
 
 CURDIR="${BASH_SOURCE[0]}";RL="readlink";([[ `uname -s`=='Darwin' ]] || RL="$RL -f")
 while([ -h "${CURDIR}" ]) do CURDIR=`$RL "${CURDIR}"`; done
@@ -30,6 +37,8 @@ function build_rpm {
     rm -f $SOURCE_DIR/zato.spec
     cp $SOURCE_DIR/zato.spec.template $SOURCE_DIR/zato.spec
     sed -i.bak "s/ZATO_VERSION/$ZATO_VERSION/g" $SOURCE_DIR/zato.spec
+    sed -i.bak "s/PACKAGE_VERSION/$PACKAGE_VERSION/g" $SOURCE_DIR/zato.spec
+
     mkdir -p $RPM_BUILD_DIR/SPECS/
     cp $SOURCE_DIR/zato.spec $RPM_BUILD_DIR/SPECS/
 

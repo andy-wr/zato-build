@@ -6,7 +6,15 @@ then
     exit 1
 fi
 
+if [[ -z "$2" ]]
+then
+    echo Argument 1 must be package version
+    exit 1
+fi
+
 ZATO_VERSION=$1
+PACKAGE_VERSION=$2
+
 cd /opt/tmp/metapackage/deb
 
 sed "s/ZATO_VERSION/$ZATO_VERSION/g" zato-metapackage.cfg.template > zato-metapackage.cfg
