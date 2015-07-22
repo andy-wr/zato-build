@@ -37,7 +37,8 @@ function build_rpm {
     mkdir $RPM_BUILD_DIR/BUILDROOT/zato-metapackage-$ZATO_VERSION
     cd $CURDIR
     cd $RPM_BUILD_DIR/SPECS
-    rpmbuild -ba zato.spec
+    rpmbuild -ba --target=i386 zato.spec
+    rpmbuild -ba --target=x86_64 zato.spec
 }
 
 prepare

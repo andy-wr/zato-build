@@ -17,5 +17,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       shell.inline = "/opt/tmp2/metapackage/rpm/build-mpkg.sh $*"
       shell.args = ["ARGS"]
   end
-  config.vm.provision "shell", inline: "cp /root/rpmbuild/RPMS/x86_64/*.rpm /opt/tmp2/rpm"
+  config.vm.provision "shell", inline: "cp /root/rpmbuild/RPMS/x86_64/*.rpm /opt/tmp2/metapackage/rpm"
+  config.vm.provision "shell", inline: "cp /root/rpmbuild/RPMS/i386/*.rpm /opt/tmp2/metapackage/rpm"
 end
