@@ -14,7 +14,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
   config.vm.synced_folder "./synced/", "/opt/tmp2"
   config.vm.provision :shell do |shell|
-      shell.inline = "/opt/tmp2/rhel7/build-mpkg.sh $*"
+      shell.inline = "/opt/tmp2/metapackage/rpm/build-mpkg.sh $*"
       shell.args = ["ARGS"]
   end
   config.vm.provision "shell", inline: "cp /root/rpmbuild/RPMS/x86_64/*.rpm /opt/tmp2/rpm"
