@@ -66,6 +66,7 @@ function build_packages {
 	/bin/cp $CURDIR/vm/$system/synced/metapackage/rpm/*.rpm $CURDIR/output/
     fi
     vagrant halt
+    vagrant destroy -f
    done
 }
 
