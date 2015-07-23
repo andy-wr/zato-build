@@ -19,6 +19,7 @@ cd /opt/tmp/metapackage/deb
 
 sed "s/ZATO_VERSION/$ZATO_VERSION/g" zato-metapackage.cfg.template > zato-metapackage.cfg
 sed "s/ZATO_VERSION/$ZATO_VERSION/g" changelog.template > changelog
+sed -i "s/PACKAGE_VERSION/$PACKAGE_VERSION/g" changelog
 
 equivs-build --arch=i386 zato-metapackage.cfg
 equivs-build --arch=amd64 zato-metapackage.cfg

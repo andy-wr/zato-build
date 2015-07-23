@@ -1,4 +1,4 @@
-zato-metapackage (ZATO_VERSION) stable; urgency=low
+zato-metapackage (ZATO_VERSION-PACKAGE_VERSION) stable; urgency=low
 
   * Create metapackage for zato
 
