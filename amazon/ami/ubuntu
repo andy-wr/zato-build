@@ -1,0 +1,44 @@
+########## UBUNTU script ####################
+sudo su -
+apt-get update
+apt-get -y install apt-transport-https
+apt-get -y install python-software-properties software-properties-common
+apt-get -y install redis-server
+apt-get -y install htop mc vim
+curl -s https://zato.io/repo/zato-0CBD7F72.pgp.asc | sudo apt-key add -
+
+apt-add-repository https://zato.io/repo/stable/2.0/ubuntu
+apt-get update
+
+apt-get -y install zato
+
+chmod +x /etc/rc.local
+
+sed -i 's/exit 0//g' /etc/rc.local
+echo "# Update Zato" >> /etc/rc.local
+echo "if [ ! -f /opt/zato/zato_ami_first_update ]; then" >> /etc/rc.local
+echo "echo \" + Updating Zato\"" >> /etc/rc.local
+echo "touch /opt/zato/zato_ami_first_update" >> /etc/rc.local
+echo "apt-get -y install --only-upgrade zato" >> /etc/rc.local
+echo "echo \" + Updated Zato\"" >> /etc/rc.local
+echo "EC2_AVAIL_ZONE=\"\`wget -q -O - http://instance-data/latest/meta-data/placement/availability-zone\`\"" >> /etc/rc.local
+echo "test -n \$EC2_AVAIL_ZONE && curl -s https://zato.io/support/aws/ami/zone/\$EC2_AVAIL_ZONE >/dev/null" >> /etc/rc.local
+echo "fi" >> /etc/rc.local
+
+echo "exit 0" >> /etc/rc.local
+
+passwd -l root
+
+shred -u /etc/ssh/*_key /etc/ssh/*_key.pub
+find /opt/zato/ -name *.pyc -exec shred -u {} \;
+
+find /root/.ssh -type f -exec shred -u {} \;
+
+find /home/ubuntu/.ssh -type f -exec shred -u {} \;
+
+find /var/log -type f -exec shred -u {} \;
+
+cat /dev/null > ~/.bash_history && history -c && exit
+cat /dev/null > ~/.bash_history && history -c && exit
+
+########## END UBUNTU script ################

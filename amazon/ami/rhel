@@ -1,0 +1,65 @@
+########## RHEL script ####################
+sudo su -
+echo "[zato-2.0]" > /etc/yum.repos.d/zato-2.0.repo
+echo "name=zato-2.0" >> /etc/yum.repos.d/zato-2.0.repo
+echo "baseurl=https://zato.io/repo/stable/2.0/rhel/el\$releasever/\$basearch" >> /etc/yum.repos.d/zato-2.0.repo
+echo "enabled=1" >> /etc/yum.repos.d/zato-2.0.repo
+echo "gpgcheck=1" >> /etc/yum.repos.d/zato-2.0.repo
+echo "gpgkey=https://zato.io/repo/zato-0CBD7F72.pgp.asc" >> /etc/yum.repos.d/zato-2.0.repo
+
+yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional
+
+yum clean expire-cache
+yum check-update
+yum -y update
+
+yum -y install zato
+
+yum -y install wget
+yum -y install htop
+yum -y install mc 
+yum -y install vim
+
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/j/jemalloc-3.6.0-1.el7.x86_64.rpm
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/r/redis-2.8.19-2.el7.x86_64.rpm
+yum -y install jemalloc-3.6.0-1.el7.x86_64.rpm
+yum -y install redis-2.8.19-2.el7.x86_64.rpm
+
+chmod +x /etc/rc.d/rc.local
+
+echo "# Update Zato" >> /etc/rc.d/rc.local
+echo "if [ ! -f /opt/zato/zato_ami_first_update ]; then" >> /etc/rc.d/rc.local
+echo "echo \" + Updating Zato\"" >> /etc/rc.d/rc.local
+echo "touch /opt/zato/zato_ami_first_update" >> /etc/rc.d/rc.local
+echo "yum update -y zato" >> /etc/rc.d/rc.local
+echo "echo \" + Updated Zato\"" >> /etc/rc.d/rc.local
+echo "EC2_AVAIL_ZONE=\"\`wget -q -O - http://instance-data/latest/meta-data/placement/availability-zone\`\"" >> /etc/rc.d/rc.local
+echo "test -n \$EC2_AVAIL_ZONE && curl -s https://zato.io/support/aws/ami/zone/\$EC2_AVAIL_ZONE >/dev/null" >> /etc/rc.d/rc.local
+echo "fi" >> /etc/rc.d/rc.local
+
+
+
+echo "PermitRootLogin without-password" >> /etc/ssh/sshd_config
+echo "UseDNS no" >> /etc/ssh/sshd_config
+
+passwd -l root
+
+shred -u /etc/ssh/*_key /etc/ssh/*_key.pub
+find /opt/zato/ -name *.pyc -exec shred -u {} \;
+
+find /root/.ssh -type f -exec shred -u {} \;
+find /root/.pki -type f -exec shred -u {} \;
+find /root/*.rpm -type f -exec shred -u {} \;
+
+find /home/ec2-user/.ssh -type f -exec shred -u {} \;
+find /home/ec2-user/.pki -type f -exec shred -u {} \;
+
+find /var/log -type f -exec shred -u {} \;
+
+shred -u /home/ec2-user/.*history
+shred -u /root/.*history
+
+cat /dev/null > ~/.bash_history && history -c && exit
+cat /dev/null > ~/.bash_history && history -c && exit
+
+########## END RHEL script ################

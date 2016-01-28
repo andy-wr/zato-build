@@ -1,0 +1,75 @@
+########## AMI LINUX script ####################
+sudo su -
+echo "[zato-2.0]" > /etc/yum.repos.d/zato-2.0.repo
+echo "name=zato-2.0" >> /etc/yum.repos.d/zato-2.0.repo
+echo "baseurl=https://zato.io/repo/stable/2.0/rhel/el7/\$basearch" >> /etc/yum.repos.d/zato-2.0.repo
+echo "enabled=1" >> /etc/yum.repos.d/zato-2.0.repo
+echo "gpgcheck=1" >> /etc/yum.repos.d/zato-2.0.repo
+echo "gpgkey=https://zato.io/repo/zato-0CBD7F72.pgp.asc" >> /etc/yum.repos.d/zato-2.0.repo
+
+yum clean expire-cache
+yum check-update
+yum -y update
+
+
+wget http://mirror.centos.org/centos/7/os/x86_64/Packages/tcl-8.5.13-8.el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/x86_64/Packages/tk-8.5.13-6.el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/x86_64/Packages/tix-8.4.3-12.el7.x86_64.rpm
+wget http://mirror.centos.org/centos/7/os/x86_64/Packages/bash-completion-2.1-6.el7.noarch.rpm
+wget http://rpms.famillecollet.com/enterprise/6/remi/x86_64/redis-3.0.5-1.el6.remi.x86_64.rpm
+
+yum -y install tcl-8.5.13-8.el7.x86_64.rpm
+yum -y install tk-8.5.13-6.el7.x86_64.rpm 
+yum -y install tix-8.4.3-12.el7.x86_64.rpm 
+yum -y install bash-completion-2.1-6.el7.noarch.rpm 
+yum -y install redis-3.0.5-1.el6.remi.x86_64.rpm
+yum -y install python27-numpy.x86_64
+yum -y install python27-scipy.x86_64
+yum -y install htop
+yum -y install mc 
+yum -y install vim
+
+chkconfig redis on
+ln -s /usr/lib64/python2.7/dist-packages/numpy /usr/lib64/python2.7/site-packages/
+ln -s /usr/lib64/python2.7/dist-packages/scipy /usr/lib64/python2.7/site-packages/
+
+yum -y install zato
+
+chmod +x /etc/rc.d/rc.local
+
+echo "# Update Zato" >> /etc/rc.d/rc.local
+echo "if [ ! -f /opt/zato/zato_ami_first_update ]; then" >> /etc/rc.d/rc.local
+echo "echo \" + Updating Zato\"" >> /etc/rc.d/rc.local
+echo "touch /opt/zato/zato_ami_first_update" >> /etc/rc.d/rc.local
+echo "yum update -y zato" >> /etc/rc.d/rc.local
+echo "echo \" + Updated Zato\"" >> /etc/rc.d/rc.local
+echo "EC2_AVAIL_ZONE=\"\`wget -q -O - http://instance-data/latest/meta-data/placement/availability-zone\`\"" >> /etc/rc.d/rc.local
+echo "test -n \$EC2_AVAIL_ZONE && curl -s https://zato.io/support/aws/ami/zone/\$EC2_AVAIL_ZONE >/dev/null" >> /etc/rc.d/rc.local
+echo "fi" >> /etc/rc.d/rc.local
+
+
+sed -i 's/PermitRootLogin/#PermitRootLogin/g' /etc/ssh/sshd_config
+echo "PermitRootLogin without-password" >> /etc/ssh/sshd_config
+echo "UseDNS no" >> /etc/ssh/sshd_config
+
+passwd -l root
+
+shred -u /etc/ssh/*_key /etc/ssh/*_key.pub
+find /opt/zato/ -name *.pyc -exec shred -u {} \;
+
+find /root/.ssh -type f -exec shred -u {} \;
+find /root/.pki -type f -exec shred -u {} \;
+find /root/*.rpm -type f -exec shred -u {} \;
+
+find /home/ec2-user/.ssh -type f -exec shred -u {} \;
+find /home/ec2-user/.pki -type f -exec shred -u {} \;
+
+find /var/log -type f -exec shred -u {} \;
+
+shred -u /home/ec2-user/.*history
+shred -u /root/.*history
+
+cat /dev/null > ~/.bash_history && history -c && exit
+cat /dev/null > ~/.bash_history && history -c && exit
+
+########## END AMI LINUX script ################
